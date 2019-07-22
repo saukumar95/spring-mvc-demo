@@ -18,11 +18,20 @@
 	<!-- Step 4: Add support for conversion, formatting and validation support -->
 	<mvc:annotation-driven />
 
+	<mvc:resources mapping="/resources/**"
+		location="/resources/"></mvc:resources>
+
 	<!-- Step 5: Define Spring MVC view resolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/view/" />
 		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Load customer message bean -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="resources/messages" />
 	</bean>
 
 </beans>

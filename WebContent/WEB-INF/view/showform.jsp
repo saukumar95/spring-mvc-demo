@@ -11,7 +11,7 @@
 		<div class="d-flex justify-content-center">
 			<h2>Spring Demo -- Application</h2>
 		</div>
-		<form action=processFormVersionTwo method="get">
+		<form action=processFormVersionThree method="POST">
 			<label>Name:</label> <input type="text" name="sname"
 				placeholder="Enter your name" /> <input type="submit"
 				value="Submit" />
