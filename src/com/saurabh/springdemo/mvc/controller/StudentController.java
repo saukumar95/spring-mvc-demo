@@ -1,7 +1,10 @@
 package com.saurabh.springdemo.mvc.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.hibernate.Session;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.saurabh.springdemo.mvc.model.Student;
+import com.saurabh.springdemo.mvc.util.SessionFactoryBean;
 
 @Controller
 @RequestMapping("/student")
@@ -21,7 +25,23 @@ public class StudentController {
 	public void initBinder(WebDataBinder dataBinder) {
 		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+	}
 
+	@RequestMapping("/listStudent")
+	public String viewStudent(Model model) {
+
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		try {
+			session.beginTransaction();
+			List<Student> listStudent = session.createQuery("from Student").getResultList();
+			model.addAttribute("studentList", listStudent);
+			session.getTransaction().commit();
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
+		}
+		return "list-student";
 	}
 
 	@RequestMapping("/showForm")
@@ -33,19 +53,23 @@ public class StudentController {
 
 	@RequestMapping("/processForm")
 	public String processForm(@Valid @ModelAttribute("student") Student student, BindingResult theBindingResult) {
-
-		if (theBindingResult.hasErrors()) {
-			return "student-form";
-		} else {
-			String firstName = student.getFirstName();
-			String lastName = student.getLastName();
-			System.out.println("FirstName: " + firstName);
-			System.out.println("LastName: " + lastName);
-			System.out.println("Country: " + student.getCountryName());
-			System.out.println("Fav OS: " + student.getFavoriteOperatingSystem());
-			return "student-confirmation";
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		String page = "";
+		try {
+			session.beginTransaction();
+			session.save(student);
+			session.getTransaction().commit();
+			if (theBindingResult.hasErrors()) {
+				page = "student-form";
+			} else {
+				page = "student-confirmation";
+			}
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
 		}
-
+		return page;
 	}
 
 }

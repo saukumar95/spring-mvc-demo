@@ -44,14 +44,6 @@
 			C# <form:radiobutton path="favoriteLanguage" value="C#" />
 			<br>
 			<br>
-			<label>Operating System:</label>
-			<br>
-			<br>
-			Linux <form:checkbox path="favoriteOperatingSystem" value="Linux" />
-			Mac OS <form:checkbox path="favoriteOperatingSystem" value="Mac OS" />
-			Window <form:checkbox path="favoriteOperatingSystem" value="Window" />
-			<br>
-			<br>
 			Free passes: <form:input path="freePasses" />
 			<form:errors path="freePasses" cssClass="error" />
 			<br>

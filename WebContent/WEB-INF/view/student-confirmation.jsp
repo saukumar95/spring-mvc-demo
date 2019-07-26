@@ -14,12 +14,6 @@
 	<br>
 	<br> Favourite Language: ${student.favoriteLanguage }
 	<br>
-	<br> Operating System:
-	<ul>
-		<c:forEach var="os" items="${student.favoriteOperatingSystem }">
-			<li>${ os}</li>
-		</c:forEach>
-	</ul>
 	<br>
 	<br> Free Passes: ${student.freePasses }
 	<br>
