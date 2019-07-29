@@ -52,16 +52,16 @@ public class StudentController {
 	}
 
 	@RequestMapping("/processForm")
-	public String processForm(@Valid @ModelAttribute("student") Student student, BindingResult theBindingResult) {
+	public String processForm(@ModelAttribute("student") @Valid Student student, BindingResult theBindingResult) {
 		String page = "";
 		Session session = SessionFactoryBean.getInstance().getCurrentSession();
 		try {
-			session.beginTransaction();
-			Long id = (Long) session.save(student);
-			session.getTransaction().commit();
 			if (theBindingResult.hasErrors()) {
 				page = "student-form";
 			} else {
+				session.beginTransaction();
+				Long id = (Long) session.save(student);
+				session.getTransaction().commit();
 				page = "redirect:/student/showStudent/" + id;
 			}
 		} catch (Exception ex) {
@@ -110,14 +110,19 @@ public class StudentController {
 	}
 
 	@RequestMapping(value = "/updateAndSave")
-	public String saveUpdatedStudent(@ModelAttribute("students") Student student) {
+	public String saveUpdatedStudent(@Valid @ModelAttribute("students") Student student,
+			BindingResult theBindingResult) {
 		Session session = SessionFactoryBean.getInstance().getCurrentSession();
 		String page = "";
 		try {
-			session.beginTransaction();
-			session.saveOrUpdate(student);
-			session.getTransaction().commit();
-			page = "redirect:/student/showStudent/" + student.getId();
+			if (theBindingResult.hasErrors()) {
+				page = "redirect:/student/updateStudent/" + student.getId();
+			} else {
+				session.beginTransaction();
+				session.saveOrUpdate(student);
+				session.getTransaction().commit();
+				page = "redirect:/student/showStudent/" + student.getId();
+			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		} finally {
