@@ -55,11 +55,19 @@ public class Student implements Serializable {
 
 	public Student() {
 		countryOptions = new LinkedHashMap<>();
-		countryOptions.put("IND", "India");
-		countryOptions.put("IR", "Ireland");
-		countryOptions.put("GER", "Germany");
-		countryOptions.put("RUS", "Russia");
-		countryOptions.put("USA", "United States of America");
+		countryOptions.put("India", "India");
+		countryOptions.put("Ireland", "Ireland");
+		countryOptions.put("Germany", "Germany");
+		countryOptions.put("Russia", "Russia");
+		countryOptions.put("United States of America", "United States of America");
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -128,6 +136,14 @@ public class Student implements Serializable {
 
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", countryName="
+				+ countryName + ", favoriteLanguage=" + favoriteLanguage + ", freePasses=" + freePasses
+				+ ", postalCode=" + postalCode + ", courseCode=" + courseCode + ", countryOptions=" + countryOptions
+				+ "]";
 	}
 
 }

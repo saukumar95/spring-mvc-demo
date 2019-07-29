@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/")
 public class HomeController {
 
-	@RequestMapping("/home")
+	@RequestMapping("/")
 	public String showMyPage() {
 		return "home";
 	}

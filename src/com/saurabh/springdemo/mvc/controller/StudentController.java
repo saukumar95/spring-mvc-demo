@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.saurabh.springdemo.mvc.model.Student;
@@ -29,7 +30,6 @@ public class StudentController {
 
 	@RequestMapping("/listStudent")
 	public String viewStudent(Model model) {
-
 		Session session = SessionFactoryBean.getInstance().getCurrentSession();
 		try {
 			session.beginTransaction();
@@ -53,16 +53,16 @@ public class StudentController {
 
 	@RequestMapping("/processForm")
 	public String processForm(@Valid @ModelAttribute("student") Student student, BindingResult theBindingResult) {
-		Session session = SessionFactoryBean.getInstance().getCurrentSession();
 		String page = "";
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
 		try {
 			session.beginTransaction();
-			session.save(student);
+			Long id = (Long) session.save(student);
 			session.getTransaction().commit();
 			if (theBindingResult.hasErrors()) {
 				page = "student-form";
 			} else {
-				page = "student-confirmation";
+				page = "redirect:/student/showStudent/" + id;
 			}
 		} catch (Exception ex) {
 			System.out.println(ex);
@@ -72,4 +72,75 @@ public class StudentController {
 		return page;
 	}
 
+	@RequestMapping(value = "/showStudent/{id}")
+	public String showStudent(@PathVariable("id") String id, Model model) {
+		String page = "";
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		try {
+			session.beginTransaction();
+			Student student = session.get(Student.class, Long.parseLong(id));
+			model.addAttribute("student", student);
+			session.getTransaction().commit();
+			page = "show-student";
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
+		}
+		return page;
+	}
+
+	@RequestMapping(value = "/updateStudent/{id}")
+	public String updateStudent(@PathVariable("id") Long id, Model model) {
+		String page = "";
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		try {
+			session.beginTransaction();
+			Student student = session.get(Student.class, id);
+			model.addAttribute("command", student);
+			model.addAttribute("countryOptions", new Student().getCountryOptions());
+			session.getTransaction().commit();
+			page = "update-student";
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
+		}
+		return page;
+	}
+
+	@RequestMapping(value = "/updateAndSave")
+	public String saveUpdatedStudent(@ModelAttribute("students") Student student) {
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		String page = "";
+		try {
+			session.beginTransaction();
+			session.saveOrUpdate(student);
+			session.getTransaction().commit();
+			page = "redirect:/student/showStudent/" + student.getId();
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
+		}
+		return page;
+	}
+
+	@RequestMapping(value = "/deleteStudent/{id}")
+	public String deleteStudent(@PathVariable("id") Long id) {
+		String page = "";
+		Session session = SessionFactoryBean.getInstance().getCurrentSession();
+		try {
+			session.beginTransaction();
+			Student student = session.get(Student.class, id);
+			session.delete(student);
+			session.getTransaction().commit();
+			page = "redirect:/student/listStudent";
+		} catch (Exception ex) {
+			System.out.println(ex);
+		} finally {
+			session.close();
+		}
+		return page;
+	}
 }

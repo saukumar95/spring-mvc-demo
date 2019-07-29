@@ -7,11 +7,16 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<div class="bg-info vh-100">
+	<div class="bg-secondary vh-100">
 		<div class="d-flex justify-content-center">
 			<h2>Spring Demo -- Application</h2>
 		</div>
-		<span>Hello World!!</span>
+		<ul>
+			<li><a href="/spring-mvc-demo/student/listStudent"
+				class="text-light">List Student</a></li>
+			<li><a href="/spring-mvc-demo/student/showForm"
+				class="text-light">New Student</a></li>
+		</ul>
 	</div>
 </body>
 </html>
