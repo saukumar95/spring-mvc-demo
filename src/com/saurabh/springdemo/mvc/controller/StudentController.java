@@ -34,8 +34,12 @@ public class StudentController {
 		try {
 			session.beginTransaction();
 			List<Student> listStudent = session.createQuery("from Student").getResultList();
-			model.addAttribute("studentList", listStudent);
-			session.getTransaction().commit();
+			if (!listStudent.isEmpty()) {
+				model.addAttribute("studentList", listStudent);
+				session.getTransaction().commit();
+			} else {
+				return "redirect:/student/showForm";
+			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		} finally {
@@ -82,6 +86,11 @@ public class StudentController {
 			model.addAttribute("student", student);
 			session.getTransaction().commit();
 			page = "show-student";
+//			if (student != null) {
+//				
+//			} else {
+//				return "redirect:/student/listStudent";
+//			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		} finally {
@@ -97,10 +106,14 @@ public class StudentController {
 		try {
 			session.beginTransaction();
 			Student student = session.get(Student.class, id);
-			model.addAttribute("command", student);
-			model.addAttribute("countryOptions", new Student().getCountryOptions());
-			session.getTransaction().commit();
-			page = "update-student";
+			if (student != null) {
+				model.addAttribute("command", student);
+				model.addAttribute("countryOptions", new Student().getCountryOptions());
+				session.getTransaction().commit();
+				page = "update-student";
+			} else {
+				return "redirect:/student/listStudent";
+			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		} finally {
@@ -138,9 +151,13 @@ public class StudentController {
 		try {
 			session.beginTransaction();
 			Student student = session.get(Student.class, id);
-			session.delete(student);
-			session.getTransaction().commit();
-			page = "redirect:/student/listStudent";
+			if (student != null) {
+				session.delete(student);
+				session.getTransaction().commit();
+				page = "redirect:/student/listStudent";
+			} else {
+				return "redirect:/student/listStudent";
+			}
 		} catch (Exception ex) {
 			System.out.println(ex);
 		} finally {
